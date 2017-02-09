@@ -6,6 +6,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List;"%>
 <jsp:include page="checkCountry.jsp" />
+<% 
+Boolean isMemberLoggedIn = false;
+    String memberEmail = (String) (session.getAttribute("memberEmail"));
+    if (memberEmail == null) {
+        isMemberLoggedIn = false;
+    } else {
+        isMemberLoggedIn = true;
+    }
+%>
 <html> 
     <jsp:include page="header.html" />
     <body>
@@ -78,24 +87,33 @@
                                         <h4>Personal Information</h4>
                                         <div class="form-group">
                                             <label>Name</label>
+                                            <%if (member.getName() != null && member.getName() != "") {%>
+                                            <input class="form-control" required="true" name="name" type="text" value="<%=member.getName()%>">
+                                                <%} else {%>
                                             <input class="form-control" required="true" name="name" type="text" value="">
+                                            <%}%>
                                         </div>
                                         <div class="form-group">
                                             <label>E-mail Address</label>
-                                            <input class="form-control" required="true" value="" disabled/>
+                                            <input class="form-control" required="true" name = "email" value="<%=member.getEmail()%>" disabled/>
                                         </div>
                                         <div class="form-group">
                                             <label>Phone</label>
+                                            <%if (member.getPhone() != null && member.getPhone() != "") {%>
+                                            <input class="form-control" required="true" type="text" name="phone" value="<%=member.getPhone()%>">
+                                                <%} else {%>
                                             <input class="form-control" required="true" type="text" name="phone" value="">
+                                            <%}%>
                                         </div>
                                         <div class="form-group">
                                             <label>Country</label>
                                             <%if (member.getCity() != null && member.getCity() != "") {%>
                                             <select name="country" disabled>
                                                 <option value="<%=member.getCity()%>"><%=member.getCity()%></option>
+                                            </select>
                                                 <%} else {%>
                                                 <select name="country">
-                                                    <%}%>
+                                                    
                                                     <option value=""></option>
                                                     <option value="Afganistan">Afghanistan</option>
                                                     <option value="Albania">Albania</option>
@@ -345,10 +363,15 @@
                                                     <option value="Zambia">Zambia</option>
                                                     <option value="Zimbabwe">Zimbabwe</option>
                                                 </select>
+                                                <%}%>
                                         </div>
                                         <div class="form-group">
                                             <label>Address</label>
+                                            <%if (member.getAddress() != null && member.getAddress() != "") {%>
+                                            <input class="form-control" type="text" required="true" name="address" value="<%=member.getAddress()%>">
+                                                <%} else {%>
                                             <input class="form-control" type="text" required="true" name="address" value="">
+                                            <%}%>
                                         </div>
                                         <div class="form-group">
                                             <label>Set Challenge Question</label>
@@ -377,11 +400,19 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Age</label>
+                                            <%if (member.getAge() != null) {%>
+                                            <input class="form-control" name="age" step="1" type="number" min="1" max="150" value="<%=member.getAge()%>">
+                                                <%} else {%>
                                             <input class="form-control" name="age" step="1" type="number" min="1" max="150" value="">
+                                            <%}%>
                                         </div>
                                         <div class="form-group">
                                             <label>Income per annum (in USD)</label>
+                                            <%if (member.getIncome() != null) {%>
+                                            <input class="form-control" name="income" step="1" type="number" min="0" max="2147483646" value="<%=member.getIncome()%>">
+                                                <%} else {%>
                                             <input class="form-control" name="income" step="1" type="number" min="0" max="2147483646" value="">
+                                             <%}%>
                                         </div>
                                         <div class="form-group">
                                             <input type="checkbox" name="serviceLevelAgreement"> Allow us to use your particulars to serve you better?<br/>Checking the box above indicates that you agree to our <a onclick="pdpaWindow()">personal data protection policy.</a>

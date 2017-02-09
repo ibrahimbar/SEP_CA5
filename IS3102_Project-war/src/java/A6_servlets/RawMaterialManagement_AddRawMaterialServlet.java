@@ -30,13 +30,47 @@ public class RawMaterialManagement_AddRawMaterialServlet extends HttpServlet {
             System.out.println("source is " + source);
             
             if (!itemManagementBean.checkSKUExists(SKU)) {
+                
+                if (!SKU.startsWith("RM")) {
+                result = "?errMsg=Make sure the SKU starts with 'RM' followed by an integer";
+                response.sendRedirect(source + result);   
+               }
+                
+                else {
+                    String[] split = SKU.split("M");
+                    String split1 = split[0];
+                    String split2= split[1];
+                    String regex = "\\d+";
+                    
+                    if (!split2.matches(regex)) {
+                result = "?errMsg=Make sure the SKU starts with 'RM' followed by an integer";
+                response.sendRedirect(source + result);  
+                    }
+                
+                    
+                    else {
+                    
+                if(_length < 1 || width < 1 || height < 1) {
+                result = "?errMsg=Please make sure dimensions are integers and >= 1";
+                response.sendRedirect(source + result);
+                }
+                
+                else {
                 itemManagementBean.addRawMaterial(SKU, name, category, description, _length, width, height);
                 result = "?goodMsg=Raw Material with SKU: " + SKU + " has been created successfully.";
                 response.sendRedirect("RawMaterialManagement_RawMaterialServlet" + result);
+                }
+                
+               }
+              }  
             } else {
                 result = "?errMsg=Failed to add raw material, SKU: " + SKU + " already exist.";
                 response.sendRedirect(source + result);
             }
+            
+            
+
+            
         } catch (Exception ex) {
             out.println(ex);
         } finally {

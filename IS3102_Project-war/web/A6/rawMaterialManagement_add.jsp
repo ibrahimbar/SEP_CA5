@@ -50,19 +50,19 @@
                                 </div>
                                 <div class="form-group">
                                     <label>SKU</label>
-                                    <input class="form-control" required="true" type="text" name="SKU">
+                                    <input class="form-control" required="true" type="text" name="SKU" pattern="^[R]+[M]+[0-9]+">
                                 </div>
                                 <div class="form-group">
                                     <label>Length per item</label>
-                                    <input class="form-control" required="true" type="number" name="length">
+                                    <input class="form-control" required="true" type="number" name="length" min = "1" step ="1" >
                                 </div>
                                 <div class="form-group">
                                     <label>Width per item</label>
-                                    <input class="form-control" required="true" type="number" name="width">
+                                    <input class="form-control" required="true" type="number" name="width" min = "1" step="1" >
                                 </div>
                                 <div class="form-group">
                                     <label>Height per item</label>
-                                    <input class="form-control" required="true" type="number" name="height">
+                                    <input class="form-control" required="true" type="number" name="height" min="1" step="1" >
                                 </div>
                                 <div class="form-group">
                                     <input type="submit" value="Add" class="btn btn-lg btn-primary btn-block">
