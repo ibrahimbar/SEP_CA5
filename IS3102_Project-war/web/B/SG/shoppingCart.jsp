@@ -13,6 +13,7 @@
     <body>
         <%
             double finalPrice = 0.0;
+            //pull test
         %>
         <script>
             var totalPrice = 0;
