@@ -4,8 +4,10 @@ import CorporateManagement.FacilityManagement.FacilityManagementBeanLocal;
 import EntityManager.CountryEntity;
 import OperationalCRM.LoyaltyAndRewards.LoyaltyAndRewardsBeanLocal;
 import EntityManager.LoyaltyTierEntity;
+import HelperClasses.ShoppingCartLineItem;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -45,7 +47,8 @@ public class ECommerce_MemberLoginServlet extends HttpServlet {
             if (memberEmail != null) {
                 List<CountryEntity> countries = facilityManagementBean.getListOfCountries();
                 session.setAttribute("countries", countries);
-
+                ArrayList<ShoppingCartLineItem> shoppingCart = new ArrayList<ShoppingCartLineItem>();
+                session.setAttribute("shoppingCart", shoppingCart);
                 session.setAttribute("memberEmail", memberEmail);
                 response.sendRedirect("ECommerce_GetMember");
             } else {

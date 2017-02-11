@@ -50,18 +50,48 @@ public class ECommerce_AddFurnitureToListServlet extends HttpServlet {
         double price = Double.parseDouble(request.getParameter("price"));
         Long l = (Long) (session.getAttribute("countryID"));
         String z = getQuantity(l, SKU);
-        int quantity = Integer.parseInt(z);
-       
+        int itemquantity = Integer.parseInt(z);
+        int quantity = 1;
+        int check = 0;
+        int finalquantity = 0;
         
         
-        if (quantity > 0) {
+        ArrayList<ShoppingCartLineItem> shoppingCart = (ArrayList<ShoppingCartLineItem>) (session.getAttribute("shoppingCart"));
+        for (ShoppingCartLineItem item : shoppingCart) { 
+            if (item.getSKU().equals(SKU)) {
+                check++;
+                item.setQuantity((item.getQuantity() + 1));
+                finalquantity = (item.getQuantity() + 1);
+            }
+        }
+        
+        
+        
+        if ((itemquantity > 0) && (finalquantity < itemquantity)) {
             String result = "Added product to cart";
             response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?goodMsg=" + result);
+            if (check == 0) {
+                ShoppingCartLineItem s = new ShoppingCartLineItem();
+                s.setCountryID(l);
+                s.setId(id);
+                s.setImageURL(imageURL);
+                s.setName(name);
+                s.setPrice(price);
+                s.setQuantity(quantity);
+                s.setSKU(SKU);
+                
+               shoppingCart.add(s); 
+            }
+            
         }
+        
         else {
             String result = "Product is out of stock";
             response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?errMsg=" + result);
         }
+        
+        session.setAttribute("shoppingCart", shoppingCart);
+
     }
     
     public String getQuantity(Long countryID, String SKU) {
