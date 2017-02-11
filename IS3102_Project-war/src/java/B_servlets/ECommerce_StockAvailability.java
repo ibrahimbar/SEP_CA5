@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -20,9 +21,12 @@ public class ECommerce_StockAvailability extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            HttpSession session = request.getSession();
             String storeIDstring = request.getParameter("storeID");
             String SKU = request.getParameter("sku");
             String type = request.getParameter("type");
+            String arrayno = request.getParameter("arraynumber");
+            int num = Integer.parseInt(arrayno);
 
             //<editor-fold defaultstate="collapsed" desc="check storeID and SKU validity">
             if ((storeIDstring == null || storeIDstring.equals("")) && (SKU == null || SKU.equals(""))) {
@@ -40,9 +44,9 @@ public class ECommerce_StockAvailability extends HttpServlet {
             int itemQty = getQuantity(storeID, SKU);
 
             if (type.equals("Furniture")) {
-                response.sendRedirect("/IS3102_Project-war/B/SG/furnitureProductDetails.jsp?sku=" + SKU + "&itemQty=" + itemQty + "&storeID=" + storeID);
+                response.sendRedirect("/IS3102_Project-war/B/SG/furnitureProductDetails.jsp?sku=" + SKU + "&itemQty=" + itemQty + "&storeID=" + storeID + "&arraynumber=" + num);
             } else if (type.equals("Retail Product")) {
-                response.sendRedirect("/IS3102_Project-war/B/SG/retailProductDetails.jsp?sku=" + SKU + "&itemQty=" + itemQty + "&storeID=" + storeID);
+                response.sendRedirect("/IS3102_Project-war/B/SG/retailProductDetails.jsp?sku=" + SKU + "&itemQty=" + itemQty + "&storeID=" + storeID + "&arraynumber=" + num);
             }
 
         } catch (Exception ex) {
