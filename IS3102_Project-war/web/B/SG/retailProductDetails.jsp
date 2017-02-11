@@ -1,3 +1,4 @@
+<%@page import="java.text.DecimalFormat"%>
 <%@page import="HelperClasses.RetailProduct"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -7,7 +8,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="checkCountry.jsp" />
 <%
+    DecimalFormat df = new DecimalFormat("#.00"); 
     String sku = request.getParameter("sku");
+    String arrayno = request.getParameter("arraynumber");
+    int num = Integer.parseInt(arrayno);
     if (sku == null) {
 %>
 <jsp:forward page="index.jsp" />
@@ -21,7 +25,7 @@
             List<RetailProduct> retailProducts = (List<RetailProduct>) (session.getAttribute("retailProducts"));
             RetailProduct retailProduct = new RetailProduct();
             List<StoreEntity> storesInCountry = (List<StoreEntity>) session.getAttribute("storesInCountry");
-            /*insert code here*/
+            Double price = retailProducts.get(num).getPrice();
         %>
         <div class="body">
             <jsp:include page="menu2.jsp" />
@@ -42,22 +46,22 @@
                             <div class="col-md-6">
                                 <div>
                                     <div class="thumbnail">
-                                        <img alt="" class="img-responsive img-rounded" src="../../..<%/*insert imageURL*/%>">
+                                        <img alt="" class="img-responsive img-rounded" src="../../..<%=retailProducts.get(num).getImageUrl()%>">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="summary entry-summary">
-                                    <h2 class="shorter"><strong>Insert product name here</strong></h2>
+                                    <h2 class="shorter"><strong><%=retailProducts.get(num).getName()%></strong></h2>
 
-                                    <p class="price"><h4 class="amount"><%/*insert code here*/%></h4></p>
+                                    <p class="price"><h4 class="amount"><%="$"+df.format(price)%></h4></p>
                                     <strong>Description</strong>
                                     <p class="taller">
-                                        <%/*insert code here*/%>
+                                        <%=retailProducts.get(num).getDescription()%>
                                     </p>
                                     <div class="product_meta">
-                                        <span class="posted_in">Category: <a rel="tag" href="#"><%/*insert code here*/%></a></span>
+                                        <span class="posted_in">Category: <a rel="tag" href="#"><%=retailProducts.get(num).getCategory()%></a></span>
                                     </div>
                                     <br/><br/>
 
