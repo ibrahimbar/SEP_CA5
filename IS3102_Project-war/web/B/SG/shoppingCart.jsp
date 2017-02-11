@@ -126,14 +126,14 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <%ArrayList<ShoppingCartLineItem> shoppingCart = (ArrayList<ShoppingCartLineItem>) (session.getAttribute("shoppingCart"));
+                                                        <%ArrayList<ShoppingCartLineItem> shoppingCart = (ArrayList<ShoppingCartLineItem>) (session.getAttribute("shoppingCart"));                                                 
                                                             try {
                                                                 if (shoppingCart != null && shoppingCart.size() > 0) {
                                                                     for (ShoppingCartLineItem item : shoppingCart) {
                                                         %>
                                                         <tr class="cart_table_item">
                                                             <td class="product-remove">
-                                                                <input type="checkbox" name="delete" value="" />
+                                                                <input type="checkbox" name="delete" value="<%=item.getSKU()%>" />
                                                             </td>
                                                             <td class="product-thumbnail">
                                                                 <a href="furnitureProductDetails.jsp">
@@ -163,7 +163,8 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
-                                                        <%                                                                   }
+                                                        <%    finalPrice += (item.getPrice() * item.getQuantity());
+                                                                  }
                                                                 }
                                                             } catch (Exception ex) {
                                                                 System.out.println(ex);
@@ -179,7 +180,7 @@
                                                             </td>
                                                             <td class="product-subtotal">
                                                                 $<span class="amount" id="finalPrice" name="finalPrice">
-                                                                    
+                                                                    <%=finalPrice%>
                                                                 </span>
                                                             </td>
                                                         </tr>
