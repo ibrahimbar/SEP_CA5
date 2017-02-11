@@ -5,13 +5,23 @@
  */
 package B_servlets;
 
+
+import HelperClasses.ShoppingCartLineItem;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -31,19 +41,47 @@ public class ECommerce_AddFurnitureToListServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ECommerce_AddFurnitureToListServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ECommerce_AddFurnitureToListServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String id = request.getParameter("id");
+        String SKU = request.getParameter("SKU");
+        String name = request.getParameter("name");
+        String imageURL = request.getParameter("imageURL");
+        double price = Double.parseDouble(request.getParameter("price"));
+        Long l = (Long) (session.getAttribute("countryID"));
+        String z = getQuantity(l, SKU);
+        int quantity = Integer.parseInt(z);
+       
+        
+        
+        if (quantity > 0) {
+            String result = "Added product to cart";
+            response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?goodMsg=" + result);
         }
+        else {
+            String result = "Product is out of stock";
+            response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?errMsg=" + result);
+        }
+    }
+    
+    public String getQuantity(Long countryID, String SKU) {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client
+                .target("http://localhost:8080/IS3102_WebService-Student/webresources/entity.countryentity").path("getQuantity")
+                .queryParam("countryID", countryID)
+                .queryParam("SKU", SKU);
+        
+        Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.get();
+        System.out.println("status: " + response.getStatus());
+
+        if (response.getStatus() != 200) {
+            return "error";
+        }
+        
+       String x = "";
+       x = response.readEntity(String.class);
+       return x;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
