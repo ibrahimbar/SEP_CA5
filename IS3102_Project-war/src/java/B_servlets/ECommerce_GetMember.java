@@ -60,6 +60,7 @@ public class ECommerce_GetMember extends HttpServlet {
                 //out.println(m.getAge());
                 session.setAttribute("member", m);
                 session.setAttribute("memberName", m.getName());
+                session.setAttribute("memberID", m.getId());
                 session.setAttribute("inttest", "2");
                 response.sendRedirect("/IS3102_Project-war/B/SG/memberProfile.jsp");
         } catch (Exception ex) {

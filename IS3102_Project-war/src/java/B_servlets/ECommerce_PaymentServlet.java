@@ -5,10 +5,12 @@
  */
 package B_servlets;
 
+import HelperClasses.ShoppingCartLineItem;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +20,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -40,12 +49,18 @@ public class ECommerce_PaymentServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         try (PrintWriter out = response.getWriter()) {
+            
+            ArrayList<ShoppingCartLineItem> shoppingCart = (ArrayList<ShoppingCartLineItem>) (session.getAttribute("shoppingCart"));
             int datecheck = -1;
+            double finalPrice = (double) session.getAttribute("finalPrice");
+            Long memberID = (Long) session.getAttribute("memberID");
             String name = request.getParameter("txtName");
             String cardno = request.getParameter("txtCardNo");
             String securitycode = request.getParameter("txtSecuritycode");
             String Month = request.getParameter("Month");
             String year = request.getParameter("year");
+            Integer i = 59; 
+            Long l = new Long(i);
 
             
             Pattern Mastercard = Pattern.compile("^5[1-5][0-9]{14}$");
@@ -98,10 +113,18 @@ public class ECommerce_PaymentServlet extends HttpServlet {
             }
             
             else {
-                String result = "Thank you for shopping at Island Furniture. You have checkout successfully!";
-            response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?goodMsg=" + result);
+
+                    String outcome = createECommerceTransactionRecord(memberID, finalPrice, l);
                     
-                
+                    for (ShoppingCartLineItem item : shoppingCart) {
+                        
+                        String outcome2 = updateQuantity(item.getCountryID(), item.getSKU(), item.getQuantity());
+                       
+                    }
+                    shoppingCart.clear();
+              String result = "Thank you for shopping at Island Furniture. You have checkout successfully! \n"
+                      + "Collection at: Queenstown Store, 317 Alexandra Rd";
+              response.sendRedirect("/IS3102_Project-war/B/SG/shoppingCart.jsp?goodMsg=" + result);
             }
             
             
@@ -149,5 +172,52 @@ public class ECommerce_PaymentServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
+    public String createECommerceTransactionRecord(Long memberID, double amountPaid, Long storeID) {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client
+                .target("http://localhost:8080/IS3102_WebService-Student/webresources/commerce").path("createECommerceTransactionRecord")
+                .queryParam("memberID", memberID)
+                .queryParam("amountPaid", amountPaid)
+                .queryParam("storeID", storeID);
+                
+        
+
+        Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.put(Entity.entity("", "application/json"));
+        System.out.println("status: " + response.getStatus());
+        String x = "";
+//         return x = ("status: " + response.getStatus());
+               if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
+            return x = ("status: " + response.getStatus());
+        } else {
+            return x = ("failure");
+        }
+
+        
+    }
+    
+    public String updateQuantity(Long countryID, String SKU, int Quantity) {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client
+                .target("http://localhost:8080/IS3102_WebService-Student/webresources/commerce").path("updateQuantity")
+                .queryParam("countryID", countryID)
+                .queryParam("SKU", SKU)
+                .queryParam("Quantity", Quantity);
+                
+        
+
+        Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.put(Entity.entity("", "application/json"));
+        System.out.println("status: " + response.getStatus());
+        String x = "";
+                if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return x = "success";
+        } else {
+            return x = "failure";
+        }
+
+        
+    }
 
 }

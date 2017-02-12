@@ -166,6 +166,7 @@
                                                         <%    finalPrice += (item.getPrice() * item.getQuantity());
                                                                   }
                                                                 }
+                                                                session.setAttribute("finalPrice", finalPrice);
                                                             } catch (Exception ex) {
                                                                 System.out.println(ex);
                                                             }
