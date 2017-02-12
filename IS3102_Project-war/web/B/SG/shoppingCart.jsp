@@ -209,7 +209,7 @@
                                                                 <label>Name on Card: </label>
                                                             </td>
                                                             <td style="padding: 5px">
-                                                                <input type="text" class="input-text text" title="name"id="txtName" required>                                                            
+                                                                <input type="text" class="input-text text" title="name"id="txtName" name="txtName" required>                                                            
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -217,7 +217,8 @@
                                                                 <label>Card Number: </label>
                                                             </td>
                                                             <td style="padding: 5px">
-                                                                <input type="text" class="input-text text " title="cardno" id="txtCardNo" required>
+                                                                <input type="number" class="input-text text " title="cardno" id="txtCardNo" name="txtCardNo" 
+                                                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -225,7 +226,8 @@
                                                                 <label>CVV/CVC2: </label>
                                                             </td>
                                                             <td style="padding: 5px">
-                                                                <input type="text" class="input-text text " title="securitycode" id="txtSecuritycode" required>
+                                                                <input type="text" class="input-text text " title="securitycode" id="txtSecuritycode" name="txtSecuritycode" 
+                                                                      maxlength="3"  onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
                                                             </td>
                                                         </tr>
 
@@ -234,7 +236,7 @@
                                                                 <label>Expiry Date: </label>
                                                             </td>
                                                             <td style="width: 300px">
-                                                                <select style="width: 120px; display: inline-block" class="dropdown-header" title="Month">
+                                                                <select style="width: 120px; display: inline-block" class="dropdown-header" name="Month">" title="Month">
                                                                     <option>January</option>
                                                                     <option>February</option>
                                                                     <option>March</option>
@@ -248,7 +250,8 @@
                                                                     <option>November</option>
                                                                     <option>December</option>
                                                                 </select>
-                                                                <input type="text" style="width: 60px" class="input-text text" title="year" id="year" required>(eg: 2015)                                                        
+                                                                <input type="text" style="width: 60px" class="input-text text" title="year" id="year" name="year" 
+                                                                       maxlength="4"  onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>(eg: 2015)                                                        
                                                             </td>
                                                         </tr>
                                                         <tr>
